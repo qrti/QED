@@ -1,0 +1,920 @@
+#include "qed.h"
+
+#define _VER_   "2.91"
+
+#ifdef NORMPALM
+FORM ID formID_main AT (0 0 DEFSCREENWIDTH DEFSCREENHIGHT)
+NOFRAME
+USABLE
+NOSAVEBEHIND
+MENUID menuID_main
+BEGIN
+    FIELD ID fieldID_main AT (0 1 DEFSCREENWIDTH DEFSCREENHIGHT) NONUSABLE FONT 0 EDITABLE 
+            MULTIPLELINES MAXCHARS 32000
+    BUTTON "" ID buttonID_new AT (0 CONBARTOP+ICONROW1 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_open AT (10 PREVTOP 13 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_search AT (23 PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_replace AT (33 PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_bookmark AT (BOOKLISTLEFT PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+
+    REPEATBUTTON "" ID repeatbuttonID_upline AT (53 CONBARTOP+ICONROW2 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_uppage AT (66 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downpage AT (134 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downline AT (147 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+
+    BUTTON "" ID buttonID_scrolldir AT (79 PREVTOP 11 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_left AT (90 PREVTOP 8 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_rigth AT (98 PREVTOP 8 10) NONUSABLE NOFRAME FONT 0 
+    BUTTON "" ID buttonID_edit AT (106 PREVTOP 10 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_filex AT (116 PREVTOP 10 10) NONUSABLE NOFRAME FONT 0    
+
+    NOGRAFFITISTATEINDICATOR
+END
+
+BITMAPFAMILY ID bitmapID_new       "qed_normal/new.bmp"       "" "" "qed_normal/new_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_open      "qed_normal/open.bmp"      "" "" "qed_normal/open_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_search    "qed_normal/search.bmp"    "" "" "qed_normal/search_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_replace   "qed_normal/replace.bmp"   "" "" "qed_normal/replace_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_bookmark  "qed_normal/bookmark.bmp"  "" "" "qed_normal/bookmark_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAP       ID bitmapID_sbar      "qed_normal/sbar.bmp"
+BITMAPFAMILY ID bitmapID_upline    "qed_normal/upline.bmp"    "" "" "qed_normal/upline_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_uppage    "qed_normal/uppage.bmp"    "" "" "qed_normal/uppage_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_downline  "qed_normal/downline.bmp"  "" "" "qed_normal/downline_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_downpage  "qed_normal/downpage.bmp"  "" "" "qed_normal/downpage_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_scrollver "qed_normal/scrollver.bmp" "" "" "qed_normal/scrollver_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_scrollhor "qed_normal/scrollhor.bmp" "" "" "qed_normal/scrollhor_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_leftgrey  "qed_normal/leftgrey.bmp"  "" "" "qed_normal/leftgrey_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_left      "qed_normal/left.bmp"      "" "" "qed_normal/left_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_rightgrey "qed_normal/rightgrey.bmp" "" "" "qed_normal/rightgrey_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_right     "qed_normal/right.bmp"     "" "" "qed_normal/right_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_edfalse   "qed_normal/edfalse.bmp"   "" "" "qed_normal/edfalse_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_edtrue    "qed_normal/edtrue.bmp"    "" "" "qed_normal/edtrue_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_file1     "qed_normal/file1.bmp"     "" "" "qed_normal/file1_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_file2     "qed_normal/file2.bmp"     "" "" "qed_normal/file2_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAP       ID bitmapID_twinon    "qed_normal/twinon.bmp"
+BITMAP       ID bitmapID_twinoff   "qed_normal/twinoff.bmp"
+
+BITMAP       ID bitmapID_grstin0   "qed_normal/grstin0.bmp" COMPRESS
+BITMAPFAMILY ID bitmapID_grstin1   "qed_normal/grstin1.bmp"  "" "" "qed_normal/grstin1_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin2   "qed_normal/grstin2.bmp"  "" "" "qed_normal/grstin2_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin3   "qed_normal/grstin3.bmp"  "" "" "qed_normal/grstin3_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin4   "qed_normal/grstin4.bmp"  "" "" "qed_normal/grstin4_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin5   "qed_normal/grstin5.bmp"  "" "" "qed_normal/grstin5_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_readonly  "qed_normal/readonly.bmp" "" "" "qed_normal/readonly_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+
+BITMAP ID bitmapID_can       "qed_normal/qedcan.bmp"
+BITMAP ID bitmapID_ok        "qed_normal/qedok.bmp"
+BITMAP ID bitmapID_catplus   "qed_normal/qedcatpl.bmp"
+BITMAP ID bitmapID_catminus  "qed_normal/qedcatmi.bmp"
+BITMAP ID bitmapID_catren    "qed_normal/qedcatre.bmp"
+BITMAP ID bitmapID_actload   "qed_normal/qedactl.bmp"
+BITMAP ID bitmapID_actren    "qed_normal/qedactr.bmp"
+BITMAP ID bitmapID_actdel    "qed_normal/qedactd.bmp"
+BITMAP ID bitmapID_actcat    "qed_normal/qedactc.bmp"
+BITMAP ID bitmapID_gtcan     "qed_normal/qedgtcan.bmp"
+BITMAP ID bitmapID_gtok      "qed_normal/qedgtok.bmp"
+BITMAP ID bitmapID_opcapcat  "qed_normal/qedopcca.bmp"
+BITMAP ID bitmapID_opcapfile "qed_normal/qedopcfi.bmp"
+BITMAP ID bitmapID_bookadd   "qed_normal/qedboadd.bmp"
+BITMAP ID bitmapID_bookjump  "qed_normal/qedbojump.bmp"
+BITMAP ID bitmapID_bookren   "qed_normal/qedboren.bmp"
+BITMAP ID bitmapID_bookdel   "qed_normal/qedbodel.bmp"
+BITMAP ID bitmapID_booksort  "qed_normal/qedbosort.bmp"
+BITMAP ID bitmapID_srnext    "qed_normal/qedsrnxt.bmp"
+BITMAP ID bitmapID_srreplace "qed_normal/qedsrrep.bmp"
+BITMAP ID bitmapID_srall     "qed_normal/qedsrall.bmp"       
+BITMAP ID bitmapID_srcancel  "qed_normal/qedsrcan.bmp"
+BITMAP ID bitmapID_srcase    "qed_normal/qedsrcas.bmp"       
+BITMAP ID bitmapID_srtop     "qed_normal/qedsrtop.bmp"
+BITMAP ID bitmapID_srword    "qed_normal/qedsrwrd.bmp"
+
+BITMAPFAMILY ID bitmapID_qedlogo "qed_normal/qed_b1.bmp" "" "" "qed_normal/qed_b8.bmp" COMPRESS
+
+VERSION ID 1 _VER_
+ICONFAMILY "qed_normal/qed_b1.bmp" "" "" "qed_normal/qed_b8.bmp" TRANSPARENT 255 255 255
+SMALLICONFAMILY "qed_normal/qed_sb1.bmp" "" "" "qed_normal/qed_sb8.bmp" TRANSPARENT 255 255 255
+#endif
+
+//------------------------------------------------------------------------------
+
+#ifdef HANDERA
+// for automatic Handera hires mode
+HEX "sKst" ID 1000 0x00 0x00 0x00 0x00
+
+FORM ID formID_main AT (0 0 DEFSCREENWIDTH DEFSCREENHIGHT)
+NOFRAME
+USABLE
+NOSAVEBEHIND
+MENUID menuID_main
+BEGIN
+    FIELD ID fieldID_main AT (0 1 DEFSCREENWIDTH DEFSCREENHIGHT) NONUSABLE FONT 0 EDITABLE 
+            MULTIPLELINES MAXCHARS 32000
+    BUTTON "" ID buttonID_new AT (0 CONBARTOP+ICONROW1 14 18) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_open AT (14 PREVTOP 16 18) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_search AT (30 PREVTOP 13 18) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_replace AT (43 PREVTOP 13 18) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_bookmark AT (BOOKLISTLEFT PREVTOP 13 18) NONUSABLE NOFRAME FONT 0
+
+    REPEATBUTTON "" ID repeatbuttonID_upline AT (69 CONBARTOP+ICONROW2 17 11) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_uppage AT (86 PREVTOP 17 11) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downpage AT (206 PREVTOP 17 11) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downline AT (223 PREVTOP 17 11) NONUSABLE NOFRAME FONT 0
+
+    BUTTON "" ID buttonID_scrolldir AT (103 PREVTOP 17 12) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_left AT (121 PREVTOP 13 11) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_rigth AT (134 PREVTOP 12 11) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_edit AT (146 PREVTOP 13 11) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_filex AT (160 PREVTOP 13 11) NONUSABLE NOFRAME FONT 0
+
+    NOGRAFFITISTATEINDICATOR
+END
+
+BITMAP ID bitmapID_new       "qed_handera/new.bmp"
+BITMAP ID bitmapID_open      "qed_handera/open.bmp"
+BITMAP ID bitmapID_search    "qed_handera/search.bmp"
+BITMAP ID bitmapID_replace   "qed_handera/replace.bmp"
+BITMAP ID bitmapID_bookmark  "qed_handera/bookmark.bmp"
+BITMAP ID bitmapID_sbar      "qed_handera/sbar.bmp"
+BITMAP ID bitmapID_upline    "qed_handera/upline.bmp"
+BITMAP ID bitmapID_uppage    "qed_handera/uppage.bmp"
+BITMAP ID bitmapID_downline  "qed_handera/downline.bmp"
+BITMAP ID bitmapID_downpage  "qed_handera/downpage.bmp"
+BITMAP ID bitmapID_scrollver "qed_handera/scrollver.bmp"
+BITMAP ID bitmapID_scrollhor "qed_handera/scrollhor.bmp"
+BITMAP ID bitmapID_leftgrey  "qed_handera/leftgrey.bmp"
+BITMAP ID bitmapID_left      "qed_handera/left.bmp"
+BITMAP ID bitmapID_rightgrey "qed_handera/rightgrey.bmp"
+BITMAP ID bitmapID_right     "qed_handera/right.bmp"
+BITMAP ID bitmapID_edfalse   "qed_handera/edfalse.bmp"
+BITMAP ID bitmapID_edtrue    "qed_handera/edtrue.bmp"
+BITMAP ID bitmapID_file1     "qed_handera/file1.bmp"
+BITMAP ID bitmapID_file2     "qed_handera/file2.bmp"
+BITMAP ID bitmapID_twinon    "qed_handera/twinon.bmp"
+BITMAP ID bitmapID_twinoff   "qed_handera/twinoff.bmp"
+
+BITMAP ID bitmapID_can       "qed_handera/qedcan.bmp"
+BITMAP ID bitmapID_ok        "qed_handera/qedok.bmp"
+BITMAP ID bitmapID_catplus   "qed_handera/qedcatpl.bmp"
+BITMAP ID bitmapID_catminus  "qed_handera/qedcatmi.bmp"
+BITMAP ID bitmapID_catren    "qed_handera/qedcatre.bmp"
+BITMAP ID bitmapID_actload   "qed_handera/qedactl.bmp"
+BITMAP ID bitmapID_actren    "qed_handera/qedactr.bmp"
+BITMAP ID bitmapID_actdel    "qed_handera/qedactd.bmp"
+BITMAP ID bitmapID_actcat    "qed_handera/qedactc.bmp"
+BITMAP ID bitmapID_gtcan     "qed_handera/qedgtcan.bmp"
+BITMAP ID bitmapID_gtok      "qed_handera/qedgtok.bmp"
+BITMAP ID bitmapID_opcapcat  "qed_handera/qedopcca.bmp"
+BITMAP ID bitmapID_opcapfile "qed_handera/qedopcfi.bmp"
+BITMAP ID bitmapID_bookadd   "qed_handera/qedboadd.bmp"
+BITMAP ID bitmapID_bookjump  "qed_handera/qedbojump.bmp"
+BITMAP ID bitmapID_bookren   "qed_handera/qedboren.bmp"
+BITMAP ID bitmapID_bookdel   "qed_handera/qedbodel.bmp"
+BITMAP ID bitmapID_booksort  "qed_handera/qedbosort.bmp"
+BITMAP ID bitmapID_srnext    "qed_handera/qedsrnxt.bmp"
+BITMAP ID bitmapID_srreplace "qed_handera/qedsrrep.bmp"
+BITMAP ID bitmapID_srall     "qed_handera/qedsrall.bmp"       
+BITMAP ID bitmapID_srcancel  "qed_handera/qedsrcan.bmp"
+BITMAP ID bitmapID_srcase    "qed_handera/qedsrcas.bmp"       
+BITMAP ID bitmapID_srtop     "qed_handera/qedsrtop.bmp"
+BITMAP ID bitmapID_srword    "qed_handera/qedsrwrd.bmp"
+
+BITMAP ID bitmapID_grstin0   "qed_handera/grstin0.bmp"
+BITMAP ID bitmapID_grstin1   "qed_handera/grstin1.bmp"
+BITMAP ID bitmapID_grstin2   "qed_handera/grstin2.bmp"
+BITMAP ID bitmapID_grstin3   "qed_handera/grstin3.bmp"
+BITMAP ID bitmapID_grstin4   "qed_handera/grstin4.bmp"
+BITMAP ID bitmapID_readonly  "qed_handera/readonly.bmp"
+
+BITMAP ID bitmapID_qedlogo "qed_handera/qed_l_b1.bmp"  COMPRESS
+
+VERSION ID 1 _VER_
+ICON ID 2000 "qed_handera/qed_b1.bmp" TRANSPARENT 255 255 255
+ICON ID 2001 "qed_handera/qed_sb1.bmp" TRANSPARENT 255 255 255
+#endif
+
+//------------------------------------------------------------------------------
+
+#ifdef SONY
+FORM ID formID_main AT (0 0 DEFSCREENWIDTH DEFSCREENHIGHT)
+NOFRAME
+USABLE
+NOSAVEBEHIND
+MENUID menuID_main
+BEGIN
+    FIELD ID fieldID_main AT (0 1 DEFSCREENWIDTH DEFSCREENHIGHT) NONUSABLE FONT 0 EDITABLE 
+            MULTIPLELINES MAXCHARS 32000
+    BUTTON "" ID buttonID_new AT (0 CONBARTOP+ICONROW1 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_open AT (10 PREVTOP 13 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_search AT (23 PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_replace AT (33 PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_bookmark AT (BOOKLISTLEFT PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+
+    REPEATBUTTON "" ID repeatbuttonID_upline AT (53 CONBARTOP+ICONROW2 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_uppage AT (66 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downpage AT (134 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downline AT (147 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+
+    BUTTON "" ID buttonID_scrolldir AT (79 PREVTOP 11 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_left AT (90 PREVTOP 8 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_rigth AT (98 PREVTOP 8 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_edit AT (106 PREVTOP 10 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_filex AT (116 PREVTOP 10 10) NONUSABLE NOFRAME FONT 0    
+
+    NOGRAFFITISTATEINDICATOR
+END
+
+BITMAPFAMILY ID bitmapID_new       "qed_hires/new.bmp"       "" "" "qed_hires/new_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_open      "qed_hires/open.bmp"      "" "" "qed_hires/open_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_search    "qed_hires/search.bmp"    "" "" "qed_hires/search_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_replace   "qed_hires/replace.bmp"   "" "" "qed_hires/replace_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_bookmark  "qed_hires/bookmark.bmp"  "" "" "qed_hires/bookmark_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAP       ID bitmapID_sbar      "qed_hires/sbar.bmp"
+BITMAPFAMILY ID bitmapID_upline    "qed_hires/upline.bmp"    "" "" "qed_hires/upline_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_uppage    "qed_hires/uppage.bmp"    "" "" "qed_hires/uppage_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_downline  "qed_hires/downline.bmp"  "" "" "qed_hires/downline_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_downpage  "qed_hires/downpage.bmp"  "" "" "qed_hires/downpage_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_scrollver "qed_hires/scrollver.bmp" "" "" "qed_hires/scrollver_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_scrollhor "qed_hires/scrollhor.bmp" "" "" "qed_hires/scrollhor_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_leftgrey  "qed_hires/leftgrey.bmp"  "" "" "qed_hires/leftgrey_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_left      "qed_hires/left.bmp"      "" "" "qed_hires/left_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_rightgrey "qed_hires/rightgrey.bmp" "" "" "qed_hires/rightgrey_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_right     "qed_hires/right.bmp"     "" "" "qed_hires/right_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_edfalse   "qed_hires/edfalse.bmp"   "" "" "qed_hires/edfalse_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_edtrue    "qed_hires/edtrue.bmp"    "" "" "qed_hires/edtrue_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_file1     "qed_hires/file1.bmp"     "" "" "qed_hires/file1_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_file2     "qed_hires/file2.bmp"     "" "" "qed_hires/file2_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+BITMAP       ID bitmapID_twinon    "qed_hires/twinon.bmp"
+BITMAP       ID bitmapID_twinoff   "qed_hires/twinoff.bmp"
+
+BITMAP ID bitmapID_can       "qed_hires/qedcan.bmp"
+BITMAP ID bitmapID_ok        "qed_hires/qedok.bmp"
+BITMAP ID bitmapID_catplus   "qed_hires/qedcatpl.bmp"
+BITMAP ID bitmapID_catminus  "qed_hires/qedcatmi.bmp"
+BITMAP ID bitmapID_catren    "qed_hires/qedcatre.bmp"
+BITMAP ID bitmapID_actload   "qed_hires/qedactl.bmp"
+BITMAP ID bitmapID_actren    "qed_hires/qedactr.bmp"
+BITMAP ID bitmapID_actdel    "qed_hires/qedactd.bmp"
+BITMAP ID bitmapID_actcat    "qed_hires/qedactc.bmp"
+BITMAP ID bitmapID_gtcan     "qed_hires/qedgtcan.bmp"
+BITMAP ID bitmapID_gtok      "qed_hires/qedgtok.bmp"
+BITMAP ID bitmapID_opcapcat  "qed_hires/qedopcca.bmp"
+BITMAP ID bitmapID_opcapfile "qed_hires/qedopcfi.bmp"
+BITMAP ID bitmapID_bookadd   "qed_hires/qedboadd.bmp"
+BITMAP ID bitmapID_bookjump  "qed_hires/qedbojump.bmp"
+BITMAP ID bitmapID_bookren   "qed_hires/qedboren.bmp"
+BITMAP ID bitmapID_bookdel   "qed_hires/qedbodel.bmp"
+BITMAP ID bitmapID_booksort  "qed_hires/qedbosort.bmp"
+BITMAP ID bitmapID_srnext    "qed_hires/qedsrnxt.bmp"
+BITMAP ID bitmapID_srreplace "qed_hires/qedsrrep.bmp"
+BITMAP ID bitmapID_srall     "qed_hires/qedsrall.bmp"       
+BITMAP ID bitmapID_srcancel  "qed_hires/qedsrcan.bmp"
+BITMAP ID bitmapID_srcase    "qed_hires/qedsrcas.bmp"       
+BITMAP ID bitmapID_srtop     "qed_hires/qedsrtop.bmp"
+BITMAP ID bitmapID_srword    "qed_hires/qedsrwrd.bmp"
+
+BITMAP       ID bitmapID_grstin0   "qed_hires/grstin0.bmp" COMPRESS
+BITMAPFAMILY ID bitmapID_grstin1   "qed_hires/grstin1.bmp"  "" "" "qed_hires/grstin1_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin2   "qed_hires/grstin2.bmp"  "" "" "qed_hires/grstin2_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin3   "qed_hires/grstin3.bmp"  "" "" "qed_hires/grstin3_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_grstin4   "qed_hires/grstin4.bmp"  "" "" "qed_hires/grstin4_c.bmp"  TRANSPARENT 255 255 255 COMPRESS
+BITMAPFAMILY ID bitmapID_readonly  "qed_hires/readonly.bmp" "" "" "qed_hires/readonly_c.bmp" TRANSPARENT 255 255 255 COMPRESS
+
+BITMAPFAMILY ID bitmapID_qedlogo   "qed_normal/qed_b1.bmp" "" "" "qed_normal/qed_b8.bmp" COMPRESS
+
+VERSION ID 1 _VER_
+
+ICONFAMILYEX
+COMPRESS
+BEGIN
+    BITMAP "qed_hires/qed_b8.bmp"  BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/qed_b8h.bmp" BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+SMALLICONFAMILYEX
+COMPRESS
+BEGIN
+    BITMAP "qed_hires/qed_vsb8.bmp" BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/qed_sb8h.bmp" BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+// ICONFAMILY "qed_normal/qed_b1.bmp" "" "" "qed_normal/qed_b8.bmp" TRANSPARENT 255 255 255
+// SMALLICONFAMILY "qed_normal/qed_sb1.bmp" "" "" "qed_normal/qed_sb8.bmp" TRANSPARENT 255 255 255
+#endif
+
+//------------------------------------------------------------------------------
+
+#ifdef HIRES
+FORM ID formID_main AT (0 0 DEFSCREENWIDTH DEFSCREENHIGHT)
+NOFRAME
+USABLE
+NOSAVEBEHIND
+MENUID menuID_main
+BEGIN
+    FIELD ID fieldID_main AT (0 1 DEFSCREENWIDTH DEFSCREENHIGHT) NONUSABLE FONT 0 EDITABLE 
+            MULTIPLELINES MAXCHARS 32000
+    BUTTON "" ID buttonID_new AT (0 CONBARTOP+ICONROW1 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_open AT (10 PREVTOP 13 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_search AT (23 PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_replace AT (33 PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_bookmark AT (BOOKLISTLEFT PREVTOP 10 15) NONUSABLE NOFRAME FONT 0
+
+    REPEATBUTTON "" ID repeatbuttonID_upline AT (53 CONBARTOP+ICONROW2 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_uppage AT (66 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downpage AT (134 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+    REPEATBUTTON "" ID repeatbuttonID_downline AT (147 PREVTOP 13 10) NONUSABLE NOFRAME FONT 0
+
+    BUTTON "" ID buttonID_scrolldir AT (79 PREVTOP 11 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_left AT (90 PREVTOP 8 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_rigth AT (98 PREVTOP 8 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_edit AT (106 PREVTOP 10 10) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_filex AT (116 PREVTOP 10 10) NONUSABLE NOFRAME FONT 0    
+    NOGRAFFITISTATEINDICATOR
+END
+
+BITMAPFAMILYEX ID bitmapID_new 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/new.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/new_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/new.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/new_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_open 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/open.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/open_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/open.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/open_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_search 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/search.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/search_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/search.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/search_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_replace 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/replace.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/replace_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/replace.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/replace_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_bookmark 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/bookmark.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/bookmark_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/bookmark.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/bookmark_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_sbar 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/sbar.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_hires/sbar.bmp"       BPP 1 DENSITY 144
+END
+
+BITMAPFAMILYEX ID bitmapID_upline 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/upline.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/upline_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/upline.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/upline_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_uppage 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/uppage.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/uppage_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/uppage.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/uppage_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_downline 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/downline.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/downline_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/downline.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/downline_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_downpage 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/downpage.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/downpage_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/downpage.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/downpage_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_scrollver 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/scrollver.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/scrollver_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/scrollver.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/scrollver_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_scrollhor 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/scrollhor.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/scrollhor_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/scrollhor.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/scrollhor_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_leftgrey 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/leftgrey.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/leftgrey_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/leftgrey.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/leftgrey_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_left 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/left.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/left_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/left.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/left_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_rightgrey 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/rightgrey.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/rightgrey_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/rightgrey.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/rightgrey_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_right 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/right.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/right_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/right.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/right_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_edfalse 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/edfalse.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/edfalse_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/edfalse.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/edfalse_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_edtrue 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/edtrue.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/edtrue_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/edtrue.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/edtrue_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_file1 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/file1.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/file1_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/file1.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/file1_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_file2 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/file2.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/file2_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/file2.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/file2_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_twinon 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/twinon.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_hires/twinon.bmp"       BPP 1 DENSITY 144
+END
+
+BITMAPFAMILYEX ID bitmapID_twinoff 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/twinoff.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_hires/twinoff.bmp"       BPP 1 DENSITY 144
+END
+
+BITMAPFAMILYEX ID bitmapID_grstin0 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/grstin0.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_hires/grstin0.bmp"       BPP 1 DENSITY 144
+END
+
+BITMAPFAMILYEX ID bitmapID_grstin1 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/grstin1.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/grstin1_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/grstin1.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/grstin1_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_grstin2 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/grstin2.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/grstin2_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/grstin2.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/grstin2_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_grstin3 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/grstin3.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/grstin3_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/grstin3.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/grstin3_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_grstin4 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/grstin4.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/grstin4_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/grstin4.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/grstin4_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_grstin5 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/grstin5.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/grstin5_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/grstin5.bmp"       BPP 1 DENSITY 144
+    BITMAP "qed_hires/grstin5_c.bmp"     BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_readonly 
+COMPRESS
+BEGIN
+    BITMAP "qed_normal/readonly.bmp"     BPP 1 DENSITY 72
+    BITMAP "qed_normal/readonly_c.bmp"   BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/readonly.bmp"      BPP 1 DENSITY 144
+    BITMAP "qed_hires/readonly_c.bmp"    BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+BITMAPFAMILYEX ID bitmapID_qedlogo 
+COMPRESS
+BEGIN
+    BITMAP "qed_hires/qed_b1.bmp"    BPP 1 DENSITY 72
+    BITMAP "qed_hires/qed_b8.bmp"    BPP 8 DENSITY 72
+    BITMAP "qed_hires/qed_b1h.bmp"   BPP 1 DENSITY 144
+    BITMAP "qed_hires/qed_b8h.bmp"   BPP 8 DENSITY 144
+END
+
+BITMAP ID bitmapID_can       "qed_hires/qedcan.bmp"
+BITMAP ID bitmapID_ok        "qed_hires/qedok.bmp"
+BITMAP ID bitmapID_catplus   "qed_hires/qedcatpl.bmp"
+BITMAP ID bitmapID_catminus  "qed_hires/qedcatmi.bmp"
+BITMAP ID bitmapID_catren    "qed_hires/qedcatre.bmp"
+BITMAP ID bitmapID_actload   "qed_hires/qedactl.bmp"
+BITMAP ID bitmapID_actren    "qed_hires/qedactr.bmp"
+BITMAP ID bitmapID_actdel    "qed_hires/qedactd.bmp"
+BITMAP ID bitmapID_actcat    "qed_hires/qedactc.bmp"
+BITMAP ID bitmapID_gtcan     "qed_hires/qedgtcan.bmp"
+BITMAP ID bitmapID_gtok      "qed_hires/qedgtok.bmp"
+BITMAP ID bitmapID_opcapcat  "qed_hires/qedopcca.bmp"
+BITMAP ID bitmapID_opcapfile "qed_hires/qedopcfi.bmp"
+BITMAP ID bitmapID_bookadd   "qed_hires/qedboadd.bmp"
+BITMAP ID bitmapID_bookjump  "qed_hires/qedbojump.bmp"
+BITMAP ID bitmapID_bookren   "qed_hires/qedboren.bmp"
+BITMAP ID bitmapID_bookdel   "qed_hires/qedbodel.bmp"
+BITMAP ID bitmapID_booksort  "qed_hires/qedbosort.bmp"
+BITMAP ID bitmapID_srnext    "qed_hires/qedsrnxt.bmp"
+BITMAP ID bitmapID_srreplace "qed_hires/qedsrrep.bmp"
+BITMAP ID bitmapID_srall     "qed_hires/qedsrall.bmp"       
+BITMAP ID bitmapID_srcancel  "qed_hires/qedsrcan.bmp"
+BITMAP ID bitmapID_srcase    "qed_hires/qedsrcas.bmp"       
+BITMAP ID bitmapID_srtop     "qed_hires/qedsrtop.bmp"
+BITMAP ID bitmapID_srword    "qed_hires/qedsrwrd.bmp"
+
+VERSION ID 1 _VER_
+
+ICONFAMILYEX
+COMPRESS
+BEGIN
+    BITMAP "qed_hires/qed_b8.bmp"  BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/qed_b8h.bmp" BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+
+SMALLICONFAMILYEX
+COMPRESS
+BEGIN
+    BITMAP "qed_hires/qed_vsb8.bmp" BPP 8 DENSITY 72 TRANSPARENT 255 255 255
+    BITMAP "qed_hires/qed_sb8h.bmp" BPP 8 DENSITY 144 TRANSPARENT 255 255 255
+END
+#endif
+
+//------------------------------------------------------------------------------
+
+FORM ID formID_open AT (10 ODTOPY 136 ODMAXHIGHT)
+FRAME
+USABLE
+MODAL
+BEGIN
+    TITLE "Open:"
+    LIST "" ID listID_dblist AT (0 ODDBLTOP 136 AUTO) USABLE FONT 0
+    
+    POPUPTRIGGER "" ID popuptriggerID_catfilt AT (7 ODBARTOP AUTO AUTO) USABLE LEFTANCHOR FONT 0
+    LIST "" ID listID_catfilt AT (6 AUTO 75 AUTO) NONUSABLE VISIBLEITEMS 2 FONT 0
+    POPUPLIST ID popuptriggerID_catfilt listID_catfilt
+    
+    BUTTON "" ID buttonID_catplus AT (7 ODBARTOP+11 15 11) USABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_catren AT (22 PREVTOP 14 11) USABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_catminus AT (36 PREVTOP 14 11) USABLE NOFRAME FONT 0
+    FORMBITMAP AT (8 PREVTOP+1) BITMAP bitmapID_catplus    
+    FORMBITMAP AT (22 PREVTOP) BITMAP bitmapID_catren   
+    FORMBITMAP AT (36 PREVTOP) BITMAP bitmapID_catminus  
+    
+    PUSHBUTTON "" ID pushbuttonID_actcat AT (61 ODBARTOP+13 13 7) USABLE FONT 0 GROUP groupID_actgroup
+    PUSHBUTTON "" ID pushbuttonID_actren AT (75 PREVTOP 13 7) USABLE FONT 0 GROUP groupID_actgroup
+    PUSHBUTTON "" ID pushbuttonID_actdel AT (89 PREVTOP 11 7) USABLE FONT 0 GROUP groupID_actgroup
+    PUSHBUTTON "" ID pushbuttonID_actload AT (84 ODBARTOP+22 16 7) USABLE FONT 0 GROUP groupID_actgroup
+    FORMBITMAP AT (60 ODBARTOP+12) BITMAP bitmapID_actcat    
+    FORMBITMAP AT (74 PREVTOP) BITMAP bitmapID_actren    
+    FORMBITMAP AT (88 PREVTOP) BITMAP bitmapID_actdel    
+    FORMBITMAP AT (83 ODBARTOP+21) BITMAP bitmapID_actload    
+    
+    BUTTON "" ID buttonID_opencancel AT (107 ODBARTOP+16 12 12) USABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_openok AT (122 PREVTOP 12 12) USABLE NOFRAME FONT 0
+    FORMBITMAP AT (107 PREVTOP) BITMAP bitmapID_can
+    FORMBITMAP AT (122 PREVTOP) BITMAP bitmapID_ok
+    
+    LIST "" ID listID_doccat AT (10 AUTO 75 AUTO) NONUSABLE VISIBLEITEMS 2 FONT 0
+    
+    FORMBITMAP AT (8 ODBARTOP+24) BITMAP bitmapID_opcapcat
+    FORMBITMAP AT (60 PREVTOP) BITMAP bitmapID_opcapfile
+END
+
+FORM ID formID_prefs AT (10 10 136 130)
+FRAME
+USABLE
+MODAL
+BEGIN
+    TITLE "Preferences:"
+    FIELD ID fieldID_filename AT (5 14+DIAOFF 125 AUTO) USABLE NONEDITABLE UNDERLINED MAXCHARS 32 FONT 0
+    
+    LABEL "Screen Width:" ID labelID_fieldwidth AT (5 28+DIAOFF) USABLE FONT 0
+    POPUPTRIGGER "" ID popuptriggerID_fieldwidth AT (PREVRIGHT+1 PREVTOP AUTO AUTO) USABLE LEFTANCHOR FONT 0
+    LIST "Default" "320" "640" "960" "1280" ID listID_fieldwidth AT (PREVLEFT+5 PREVTOP AUTO AUTO) NONUSABLE VISIBLEITEMS 5 FONT 0
+    POPUPLIST ID popuptriggerID_fieldwidth listID_fieldwidth
+   
+    LABEL "Font:" ID labelID_font AT (5 40+DIAOFF) USABLE FONT 0
+    PUSHBUTTON "A" ID pushbuttonID_stdfont AT (29 PREVTOP+1 AUTO 9) USABLE FONT 0 GROUP groupID_fontgroup
+    PUSHBUTTON "A" ID pushbuttonID_boldfont AT (PREVRIGHT+1 PREVTOP AUTO 9) USABLE FONT 1 GROUP groupID_fontgroup
+    PUSHBUTTON "A" ID pushbuttonID_largefont AT (PREVRIGHT+1 PREVTOP AUTO 9) USABLE FONT 2 GROUP groupID_fontgroup
+    PUSHBUTTON "A" ID pushbuttonID_lboldfont AT (PREVRIGHT+1 PREVTOP AUTO 9) NONUSABLE FONT 7 GROUP groupID_fontgroup
+    PUSHBUTTON "-" ID pushbuttonID_repfont1 AT (PREVRIGHT+1 PREVTOP AUTO 9) USABLE FONT 0 GROUP groupID_fontgroup
+    PUSHBUTTON "-" ID pushbuttonID_repfont2 AT (PREVRIGHT+1 PREVTOP AUTO 9) USABLE FONT 0 GROUP groupID_fontgroup
+    
+    CHECKBOX "Editable" ID checkID_editable AT (3 52+DIAOFF AUTO AUTO) USABLE FONT 0
+    CHECKBOX "Ruled" ID checkID_ruled AT (PREVLEFT 62+DIAOFF AUTO AUTO) USABLE FONT 0
+    CHECKBOX "Autoscan" ID checkID_autoscan AT (PREVLEFT 72+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Doubletap" ID checkID_doubletap AT (PREVLEFT 82+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Backup" ID checkID_backup AT (PREVLEFT 72+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Private" ID checkID_private AT (PREVLEFT 82+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Read Only" ID checkID_readonly AT (PREVLEFT 92+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Full Scroll" ID checkID_fscroll AT (PREVLEFT 92+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Hardbuttons" ID checkID_hardbuttons AT (PREVLEFT 102+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+
+    LABEL "TabSpace" ID labelID_tab AT (67 52+DIAOFF) NONUSABLE FONT 0
+    POPUPTRIGGER "" ID popuptriggerID_tab AT (PREVRIGHT+1 PREVTOP AUTO AUTO) NONUSABLE LEFTANCHOR FONT 0
+    LIST "-" "4" "8" "12" "16" ID listID_tab AT (PREVLEFT+5 PREVTOP AUTO AUTO) NONUSABLE VISIBLEITEMS 5 FONT 0
+    POPUPLIST ID popuptriggerID_tab listID_tab
+
+    CHECKBOX "Auto Indent" ID checkID_autoindent AT (67 62+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    CHECKBOX "Monochr." ID checkID_monochrome AT (67 72+DIAOFF AUTO AUTO) NONUSABLE FONT 0
+    
+    FORMBITMAP AT (100 116) BITMAP bitmapID_can
+    FORMBITMAP AT (120 PREVTOP) BITMAP bitmapID_ok
+    BUTTON "" ID buttonID_prefscancel AT (100 PREVTOP 12 12) USABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_prefsok AT (120 PREVTOP 12 12) USABLE NOFRAME FONT 0
+END
+
+FORM ID formID_bookmark AT (BOOKLISTLEFT 0 75 160)
+FRAME
+USABLE
+MODAL
+BEGIN
+    LIST "" ID listID_bookmark AT (0 0 BOOKLISTWIDTH AUTO) USABLE VISIBLEITEMS 2 FONT 0
+    LIST "up" "down" "Alpha" "Position" ID listID_booksort AT (0 0 60 AUTO) NONUSABLE VISIBLEITEMS 4 FONT 0
+
+    BUTTON "" ID buttonID_bookadd AT (0 0 15 9) USABLE NOFRAME FONT 0
+    FORMBITMAP AT (0 0) BITMAP bitmapID_bookadd    
+
+    PUSHBUTTON "" ID pushbuttonID_bookjump AT (0 0 13 7) USABLE FONT 0 GROUP groupID_bookgroup
+    PUSHBUTTON "" ID pushbuttonID_bookren AT (0 0 13 7) USABLE FONT 0 GROUP groupID_bookgroup
+    PUSHBUTTON "" ID pushbuttonID_bookdel AT (0 0 11 7) USABLE FONT 0 GROUP groupID_bookgroup
+    PUSHBUTTON "" ID pushbuttonID_booksort AT (0 0 13 7) USABLE FONT 0 GROUP groupID_bookgroup
+    FORMBITMAP AT (0 0) BITMAP bitmapID_bookjump    
+    FORMBITMAP AT (0 0) BITMAP bitmapID_bookren   
+    FORMBITMAP AT (0 0) BITMAP bitmapID_bookdel   
+    FORMBITMAP AT (0 0) BITMAP bitmapID_booksort   
+END
+
+FORM ID formID_gettext AT (10 10 134 GTHIGHT+GSIEXT)
+FRAME
+USABLE
+MODAL
+MENUID menuID_edfunc
+BEGIN
+    FIELD ID fieldID_title AT (3 1 60 AUTO) USABLE FONT 0 NONEDITABLE MAXCHARS 22
+    FIELD ID fieldID_gettext AT (3 12+GSIEXT 120 AUTO) USABLE FONT 0 EDITABLE UNDERLINED
+    GRAFFITISTATEINDICATOR AT (65-GSIEXT 1)
+    BUTTON "" ID buttonID_gtcancel AT (73 0 10 10) USABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_gtok AT (83 0 10 10) USABLE NOFRAME FONT 0
+    FORMBITMAP AT (74 1) BITMAP bitmapID_gtcan
+    FORMBITMAP AT (84 1) BITMAP bitmapID_gtok
+    CHECKBOX "" ID checkID_get1 AT (0 25+GSIEXT AUTO AUTO) NONUSABLE LEFTANCHOR FONT 0
+END
+
+FORM ID formID_searep AT (25 75 130 68+GSIEXT)
+FRAME
+USABLE
+MODAL
+MENUID menuID_edfunc
+BEGIN
+    LABEL "Search:" ID labelID_srsea AT (3 GSIEXT) USABLE FONT 0
+    FIELD ID fieldID_seatext AT (3 PREVBOTTOM-2 125 AUTO) USABLE FONT 0 EDITABLE UNDERLINED MAXCHARS 22
+    LABEL "Replace:" ID labelID_srrep AT (3 PREVBOTTOM) NONUSABLE FONT 0
+    FIELD ID fieldID_reptext AT (3 PREVBOTTOM-2 125 AUTO) NONUSABLE FONT 0 EDITABLE UNDERLINED MAXCHARS 22
+
+    PUSHBUTTON "" ID pushbuttonID_srcase AT (4 PREVBOTTOM+4 15 7) USABLE FONT 0
+    PUSHBUTTON "" ID pushbuttonID_srword AT (20 PREVTOP 17 7) USABLE FONT 0
+    PUSHBUTTON "" ID pushbuttonID_srtop AT (38 PREVTOP 13 7) USABLE FONT 0
+    FORMBITMAP AT (3 PREVTOP-1) BITMAP bitmapID_srcase    
+    FORMBITMAP AT (19 PREVTOP) BITMAP bitmapID_srword   
+    FORMBITMAP AT (37 PREVTOP) BITMAP bitmapID_srtop   
+
+    BUTTON "" ID buttonID_srnext AT (2 PREVTOP+9 20 11) USABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_srreplace AT (PREVRIGHT PREVTOP 25 11) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_srall AT (PREVRIGHT PREVTOP 16 11) NONUSABLE NOFRAME FONT 0
+    BUTTON "" ID buttonID_srcancel AT (102 PREVTOP 26 11) USABLE NOFRAME FONT 0
+    FORMBITMAP AT (3 PREVTOP+1) BITMAP bitmapID_srnext    
+    FORMBITMAP AT (22 PREVTOP) BITMAP bitmapID_srreplace NONUSABLE  
+    FORMBITMAP AT (48 PREVTOP) BITMAP bitmapID_srall NONUSABLE
+    FORMBITMAP AT (103 PREVTOP) BITMAP bitmapID_srcancel    
+
+    GRAFFITISTATEINDICATOR AT (120-GSIEXT 1)
+END
+
+#ifdef INSTITUTIONAL
+
+#else
+
+FORM ID formID_register AT (10 5 136 145)
+FRAME
+USABLE
+MODAL
+BEGIN
+    TITLE "Register Info:"
+    FORMBITMAP AT (5 16+DIAOFF) BITMAP bitmapID_qedlogo USABLE
+
+    LABEL "QED" AUTOID AT (35 25+DIAOFF) USABLE FONT 2
+    LABEL _VER_ AUTOID AT (PREVRIGHT+4 PREVTOP+2) USABLE FONT 0
+    LABEL "unregistered" ID labelID_regunreg AT (5 PREVTOP+18) NONUSABLE FONT 2
+    LABEL "by QLand" ID labelID_regreg AT (5 PREVTOP) NONUSABLE FONT 2
+    LABEL "visit qland.de/qed" AUTOID AT (PREVLEFT PREVTOP+15) USABLE FONT 0
+
+    LABEL "Ownername:" AUTOID AT (5 80) USABLE FONT 0
+    LABEL "1234567890123456789012345678901234567890" ID labelID_regowner AT (PREVLEFT PREVTOP+11) USABLE FONT 1
+    LABEL "Register Code:" AUTOID AT (PREVLEFT PREVTOP+12) USABLE FONT 0
+    FIELD ID fieldID_regcode AT (PREVLEFT PREVTOP+11 125 AUTO) USABLE FONT 1 EDITABLE UNDERLINED MAXCHARS 10
+
+    BUTTON "Register" ID buttonID_register AT (PREVLEFT PREVTOP+16 AUTO AUTO) NONUSABLE FONT 0
+    BUTTON "Later" ID buttonID_reglater AT (PREVRIGHT+5 PREVTOP AUTO AUTO) NONUSABLE FONT 0
+    BUTTON "OK" ID buttonID_regok AT (PREVRIGHT+16 PREVTOP AUTO AUTO) NONUSABLE FONT 0
+    //NOGRAFFITISTATEINDICATOR
+    GRAFFITISTATEINDICATOR AT (120 80)
+END
+
+#endif
+
+MENU ID menuID_main
+BEGIN
+  PULLDOWN "File"
+  BEGIN
+    MENUITEM "New"              menuitemID_new          "N"
+    MENUITEM "Open"             menuitemID_open         "O"
+    MENUITEM "Close"            menuitemID_close        "L"
+    MENUITEM "-"                AUTOID                     
+    MENUITEM "Save"             menuitemID_save         "S"
+    MENUITEM "Save as"          menuitemID_saveas       "W"
+    MENUITEM "Rename"           menuitemID_rename       "A"    
+    MENUITEM "Delete"           menuitemID_delete          
+    MENUITEM "-"                AUTOID                     
+    MENUITEM "Switch"           menuitemID_switch       "H"
+    MENUITEM "Beam"             menuitemID_beam                    
+  END
+  PULLDOWN "Edit"
+  BEGIN
+    MENUITEM "Undo"             menuitemID_undo         "U"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Cut"              menuitemID_cut          "X"
+    MENUITEM "Copy"             menuitemID_copy         "C"
+    MENUITEM "Paste"            menuitemID_paste        "P"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Find"             menuitemID_search       "F"
+    MENUITEM "Replace"          menuitemID_replace      "R"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Editable"         menuitemID_editable     "E"
+    MENUITEM "Jump Line"        menuitemID_jumpline     "J"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Keyboard"         sysEditMenuKeyboardCmd
+    MENUITEM "Graffiti Help"    sysEditMenuGraffitiCmd    
+  END                      
+  PULLDOWN "Options"       
+  BEGIN
+    MENUITEM "Default Prefs"    menuitemID_qedpref      "V"
+    MENUITEM "Doc Prefs"        menuitemID_docpref      "D"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Bookmark"         menuitemID_bookmark     "B"
+    MENUITEM "Book Char"        menuitemID_bookchars    "K"
+    MENUITEM "Scan Book"        menuitemID_scanbook     "M"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Toggle Bar"       menuitemID_togglebar    "T"
+    MENUITEM "Twin View"        menuitemID_twinview     "Y"
+    MENUITEM "Doc Info"         menuitemID_dbinfo       "I"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Register/About"   menuitemID_register  
+  END  
+END
+
+// free: G P Q Z V
+// G used for Handera rotate screen
+
+MENU ID menuID_edfunc
+BEGIN
+  PULLDOWN "Edit"
+  BEGIN
+    MENUITEM "Undo"             sysEditMenuUndoCmd         "U"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Cut"              sysEditMenuCutCmd          "X"
+    MENUITEM "Copy"             sysEditMenuCopyCmd         "C"
+    MENUITEM "Paste"            sysEditMenuPasteCmd        "P"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Select All"       sysEditMenuSelectAllCmd    "A"
+    MENUITEM "-"                AUTOID
+    MENUITEM "Keyboard"         sysEditMenuKeyboardCmd
+    MENUITEM "Graffiti Help"    sysEditMenuGraffitiCmd    
+  END  
+END
+
+ALERT ID alertID_info
+INFORMATION
+BEGIN
+  TITLE "Info"
+  MESSAGE "^1^2^3"
+  BUTTONS "OK"
+END
+
+ALERT ID alertID_okcancel
+CONFIRMATION
+BEGIN
+  TITLE "Info"
+  MESSAGE "^1^2^3"
+  BUTTONS "OK" "Cancel"
+END
+
+/*
+FORM ID formID_busy AT (10 50 140 40)
+NOFRAME
+USABLE
+MODAL
+BEGIN
+    TITLE ""
+    LABEL "wait..." ID labelID_busy AT (8 19) USABLE FONT 0
+END
+*/
+

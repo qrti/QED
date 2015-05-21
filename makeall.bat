@@ -1,0 +1,30 @@
+@echo off
+del *.ro
+del *.grc
+del *.o
+set MODIFY=SONY
+call palmmake.bat
+del *.ro
+del *.grc
+del *.o
+del qed_%MODIFY%_l
+set MODIFY=HANDERA
+call palmmake.bat
+del *.ro
+del *.grc
+del *.o
+del qed_%MODIFY%_l
+set MODIFY=HIRES
+call palmmake.bat
+del *.ro
+del *.grc
+del *.o
+del qed_%MODIFY%_l
+ren qed_HIRES.prc qed.prc
+set MODIFY=NORMPALM
+call palmmake.bat
+del *.ro
+del *.grc
+del *.o
+del qed_%MODIFY%_l
+ren qed_NORMPALM.prc qed_LOWRES.prc

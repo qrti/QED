@@ -1,0 +1,750 @@
+V2.91
+- recompiled with current Treo header files (to support entering accented chars using Alt key)
+- fixed reset caused from repeatedly pressed shift key on Treo650
+
+V2.90
+- hires support for OS5 devices
+- added Treo keylist and option state support
+- added text selection upwards
+- added Monochrome switch in Menu/Options/Default Prefs
+..(more contrast for color devices)
+- added 'Keyboard' 'Graffity Help' to Menu/Edit
+- added 'Undo' 'Select All' 'Keyboard' 'Graffity Help' for dialog menus
+- reworked fonts in package
+- corrected modification date handling
+- fixed problem with fonthack123
+- fixed document position saving problem
+- fixed global search problem
+- no support for OS Version < 3.0 anymore
+
+Versions:
+qed.prc             color hires or lowres devices       OS3.5 - OS5
+qed sony.prc        Sony Clié hires color devices       OS4   - OS5
+qed lowres.prc      monochrome and color lowres         OS3   - OS5
+qed handera.prc     Handera devices                     OS3   -
+
+-----
+ToDo
+-----
+
+- hires for OS5 (-> Hires Fonts and OS5)
+- speeded up replace all on record layer 
+- QED fonts with chars for softkeyboard and graffity help
+- problems with other apps that catch the UIAppSwitchTrap maybe dececting of FontHack123 will help
+- category cleaner in opendialog menu
+- take category of 'saved as' files
+- center button support for Tungsten (return to launcher)
+- restore the scrollbar direction 
+
+- OS5 and MsMount PiDirect II checken
+- FindHack problem (-> FindHack)
+- Handera system fonts
+- right justify for hebrew texts
+- Alphasmart version
+- category cleaner to reset all docs to unfiled
+- display CR, TAB with special font?
+- entry of CR and TAB in search/replace
+- /1 /2 shortcuts for starting external programs
+- JOT problem with shift indicator (-> JOT problem)
+
+- old OS have problems with 'variable' zero sized buttons (open/search not ok, search/replace ok)
+- max. fieldsize for uncompressed texts
+- power saving in qed?
+- more flexible toolbar (miniversion)
+- bluetooth send
+- compress/uncopmress button without 'save as'
+- close prefs with enter as well
+
+- crashs with softkeyboard & graffity help when using QuickBits www.2bitSoftware.com Option "BltDrawChars speedup"
+- busy message while loading directory
+- decrease speed of line up/down
+- replace all works too slow (try replacing in record or setting the field size smaller)
+- replace all does not replace the current finding
+- Search/Replace lies over search results on end of file
+- make Memo Pad files loadable
+- save and compress not whole field, only records that have been changed
+- slide screen works incorrect for great fieldwidths or small fonts
+  maybe a dynamic AFTERSP/BEFORESP handling would help
+- enlarge paste buffer
+- Handspring Treo's special kind of writing special chars ->
+- support of Handera special Fonts  
+- info for files in open dialog
+- VFS support 
+- card slot support, flashrom checking
+- mark text and scroll upwards (field must start on y pos 1)
+- palm print compatible
+- copy text in read only mode
+- support of standard cut/copy/paste IDs ->
+
+Later
+- color version with skins
+- multiple select for categories
+- better handling for renaming long filenames
+- get line function?
+- store last pos of one flashrom file
+- search with more options
+- split text screen
+- read how to split the code in D:\User\Palm\PalmDev\doc\texi\prc-tools_10.html
+- crashes sometimes after hotsync and editing categories (?)
+
+-----
+Rubbish
+-----
+
+from old todo
+- fold-out keyboard shortcuts
+  -- Ctrl-F find
+  -- Ctrl-G find again
+  -- Fn-Left, Fn-Right start/end of line
+  all ok's with Enter and Space, cancel's with Esc
+  Tab key
+  Open requester double tap for opening files
+  Open requester up/down keys and Enter for selecting
+  Bookmark jump and cursor position?
+  Scrollbar horizontal?
+     
+     Palm Foldout keyboard
+     ---------------------
+     CTRL-C     302
+     CTRL-V     303
+     CTRL-X     301
+     Tab        259
+     Shift-Tab  268
+     FN-Tab     9
+
+-----
+
+heap functions:
+
+	// cards = MemNumCards();	
+	// heaps = MemNumHeaps(0);
+	
+	//	index = MemHeapID(0, h);
+	
+	//Err MemHeapFreeBytes (UInt16 heapID, UInt32* freeP, UInt32* maxP)
+	// UInt16 MemHandleHeapID (MemHandle h)
+	// Boolean MemHandleDataStorage (MemHandle h)
+	// UInt16 MemHandleCardNo (MemHandle h)
+	// UInt16 MemPtrHeapID (MemPtr p)
+	// Boolean MemPtrDataStorage (MemPtr p)
+	// UInt32 MemHeapSize (UInt16 heapID)
+	// Boolean MemHeapDynamic (UInt16 heapID)
+	// UInt16 MemHeapFlags (UInt16 heapID)
+	// memHeapFlagReadOnly
+
+-----
+
+The treo has a keyboard. No graffiti
+
+One of the buttons labelled "..." allows one to select alternate
+related characters. This works in pretty much any other application
+than qed.
+
+e.g.
+
+the e key followed by ...
+normally brings up a tuny menu which allows one to select one of
+é è ë and a few other choices.
+
+similarly
+
+$ ... allows one to select various currency symbols
+
+( ... allows one to select <
+
+But none of this works in qed, so the number of characters i can 
+input is very limited.
+
+-----
+
+start support for PocketC
+
+GoToParamsPtr gp = (GoToParamsPtr)MemPtrNew(sizeof(GoToParamsType));
+MemPtrSetOwner(gp, 0);
+gp->dbID = DmFindDatabase(0, "MemoDB");
+gp->dbCardNo = 0;
+gp->recordNum = recID;
+gp->matchPos = errOffset - 1;
+gp->searchStrLen = gp->matchCustom = 1;
+LocalID id = DmFindDatabase(0, "Memo Pad");
+SysUIAppSwitch(0, id, sysAppLaunchCmdGoTo, (Ptr)gp);
+
+
+when calling 'SysUIAppSwitch' with 'sysAppLaunchCmdGoto' use the following settings:
+
+gp->dbID = DmFindDatabase(0, "nameOfDocDatabase");
+gp->searchStrLen = -1;       // -1 flags that it's no 'sysAppLaunchCmdGoTo' from 'Global Search'
+gp->matchCustom = absoluteTextPosition;
+
+Don,
+
+QED supports 3 methods of external launching:
+
+1. SysAppLaunchCmdOpenDBType
+LocalID dbID         - dbID of DOC to load
+UInt16 dbCardNo      - not evaluated
+
+2a. sysAppLaunchCmdGoTo (used for patched OnBoardC)
+Int16 searchStrLen   - !=-1
+UInt16 dbCardNo      - not evaluated
+LocalID dbID         - dbID of DOC to load
+UInt16 recordNum     - ==-1 restore stored position
+                     - !=-1 use matchPos as position
+UInt16 matchPos      - 16 bit absolute position
+UInt16 matchFieldNum - not evaluated
+UInt32 matchCustom   - not evaluated
+
+2b. sysAppLaunchCmdGoTo
+Int16 searchStrLen   - ==-1
+UInt16 dbCardNo      - not evaluated
+LocalID dbID         - dbID of DOC to load
+UInt16 recordNum     - not evaluated
+UInt16 matchPos      - not evaluated
+UInt16 matchFieldNum - not evaluated
+UInt32 matchCustom   - 32 bit absolute position
+
+-----
+
+cut/copy/paste IDs
+
+1) If the only thing that QED does after choosing the 'Paste' command is calling the FldPaste function on the main field, then You can do the following: Change the menu item ID of 'Paste' command from 1003 (which it is now) to 10003, which is the OS's default menu item ID, that automatically triggers FldPaste function on the active field, just like the shortcut bitmap does. You could get rid of 1003 menu command hander in Your code - that gives a few bytes. But if You do so with 'Copy' (10002), 'Cut' (10001) and 'Undo' (10000) then You may save even more. What is more, You may wish to add the 'Graffiti Help' (10007) and 'Keyboard' (10006) commands. I checked if it all works with the changed ID's. It all does.
+
+In one of the recent versions of QED You've introduced menu bars in pop-up windows. Here You have a chance to make even better trick than in my previous point. You not only can remove the event handlers of all those 'Copy', 'Paste', and 'Cut' commands, but You can delete the whole menu resource (1399)! Then You must replace it with the OS's default menu of the ID 10000, 10100, or 10400 (see which is better). No handlers needed, no menu needed. Over 100 bytes saved.
+
+-----
+
+bitmap sizes
+
+The big QED's icon for the Launcher (1000). You can reduce the size to 32x22 (hxv), which is the OS's advised size. This time 360 bytes saved.
+
+4) The big QED's bitmap for the About Box (1601). Just as above - 32x22 is enough. Additionally You can compress the 8-bit version (and even the 1-bit one, but it is pointless - saves only 4 bytes). Unbelieveable - 808 bytes saved here.
+
+A large icon of type tAIB, with an ID of 1000. For compatibility with 2.0 devices, this icon should be 22 x 32 pixels;
+
+40044 
+39324 32x22
+38870 COMPRESS logo
+
+39188 COMRESS logo
+38608 22x22
+
+
+-----
+compression methods
+-----
+
+Doc Header Part 1:
+
+Doc Header Part 2:
+for record 0 of a Database
+
+byte    purpose
+00      00 unknown
+01      01=uncompressed 02=compressed method 1, 04=compressed method 2
+02-03   00 00 method 1, 00 03 method 2, both unknown
+04-07   4 byte uncompressed len of text
+08-09   2 byte number of records used by text (NOTR)
+10      $10 unknown
+11-15   00 unknown
+16-x    tabel of recordlens, x = 16 + 2 * NOTR
+
+
+Compressionmethod 1:
+
+raw byte coding:
+rb from 01-08
+next rb bytes are raw
+
+space coding:
+bits 7 (and 6) is set for chars @-z with leading space
+
+relative coding:
+bit 7 is set bit 6 is zero
+bits 5-0 are bits 10-5 of relative address
+next byte bits 7-3 are bits 4-0 of relative address
+          bits 2-0 are len of relative destination +3
+
+|------- byte 1 ------| |------- byte 2 ------|
+15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+cf sc 10 09 08 07 06 05 04 03 02 01 00 L2 L1 L0         
+      |----- relative address -------| |-len -|
+      
+cf: compress flag       1 = compressed 
+                        0 = normal character (except chars 01-08)
+sc: space coding flag   1 = space coding
+                        0 = relative addressing
+
+relative address means 11 bit (2048) distance backwards in uncompressed file
+from actual decompression position
+every 4096 bytes a new independent compression block starts
+      
+
+Compressionmethod 2:     
+
+Header:
+Byte 00:        $f0 = uncompressed
+                $f1 = Compressionmethod 1
+                $fe = Compressionmethod 2.2
+                $ff = Compressionmethod 2.1 
+Byte 01, 02:    HB, LB uncompressed len of record
+
+Body Method 2.1:
+Byte 0-14:      Table of frequently used chars in text 
+Byte 15-...     Data
+Coding, nibblewise:         
+$0-$e           look up in table
+$fxx            xx is next char
+
+Body Method 2.2:
+Byte 0-14:      Table 1 of frequently used chars in text
+Byte 15-29:     Table 2 of frequently used chars in text
+Coding, nibblewise: 
+$0-$e           look up in table 1
+$fx             look up x in table 2
+$ffxx           xx is next char
+             
+-----
+history
+-----
+
+V2.82
+- works on OS5 devices now
+- loads Handera AutoCF files again
+- bugfix: saving/restoring document positions
+- bugfix: block insert does one line too much
+- fix: graphical artefacts after progress bar - second try
+
+V2.81
+- TabSpace function 
+  ('Menu/Option/Default Prefs')
+- block insert function
+  use TAB- or cursor left/right-keystroke
+  to move selected text blocks
+  (depending on TabSpace setting)
+- new document setting 'Read Only'
+  copy text without changing text accidentally
+  ('Menu/Option/Doc Prefs')
+- additional tiny lores monospaced font
+- fix: 'hanging' shift key of NR70V keyboard
+- fix: command bar visible if no document is loaded
+- fix: graphical artefacts after progress bar
+
+V2.80
+- special version for Sony Clié devices
+  ~ support of variable screen heights (*)
+  ~ support of hires fonts
+  ~ hires command bar
+- two external fonts loadable (also hires fonts)
+  ~ 2 tiny hires monospaced fonts (look in zip file)
+    (_very_ useful for tables + sourcecode!!)
+  ~ 2 tiny hires proportional fonts (look in zip file)
+    (_very_ readable for text documents)
+  ~ 1 non hires monospaced font (look in zip file)
+    (for tables + souececode on non hires devices)
+- added beaming feature for documents
+  ('Menu/File/Beam')
+- colored command bar for color devices
+- screen slide function works more smooth now
+- improved restoring of document positions 
+- corrected doubletap function (for quick copy-paste) 
+- bugfix: solved problem with Fonthack123
+- minor fixes
+
+* to leave fullscreen mode of NR70 tap on screen corner:
+  - upper left to exit document
+  - upper right to exit fullscreen mode
+
+V2.76
+- special version for Handera devices
+  ~ support of screen resizing
+  ~ support of screen rotation 
+    ('Menu/Options/Rotation')
+- enlarged command bar buttons and scrollbar
+- new horizontal scrolling buttons
+- progressbar and status messages now on bottom of screen
+  (so you can continue reading while the device is busy)
+- open- and bookmark-dialog supports changed standard font now 
+  (use fonthack123 to change fonts)
+- fix: horizontal position restore
+
+V2.75
+- 'drag screen' navigation
+  (when document is read only) 
+- auto indent function 
+  ('Menu/Options/Default Prefs')
+- co-operation with MsMount
+  access DOCs stored on SD Card or Memory Stick
+- co-operation with (patched) OnBoardC
+- fix: crashes with defective DOCs
+- fix: preferences settings and OS4
+- fix: scroll speed with different font sizes 
+- bugfix: OS2.0 Register/About dialog
+
+V2.74
+- word sensitive search/replace possible now
+- optional case/word sensitive global search
+  (use the settings in the search dialog)
+- hardbuttons can be switched off now 
+  ('Menu/Options/Default Prefs')
+- left hardbutton now jumps to beginning of line
+- prepared for co-operation with PocketC
+- bugfix: screenwidth setting
+- bugfix: sidescroll with hardbuttons
+- bugfix: memory leak in jump bookmark
+
+V2.73
+- QED can be started with a document from Launcher III now
+  so even documents on external memory can be viewed and edited
+- hardbuttons for file navigation
+  button1        - scroll horizontal left
+  button2        - scroll up 1 line
+  up/down button - scroll up/down 1 page
+  button3        - scroll down 1 line
+  button4        - scroll horizontal right
+- global search now not case sensitive
+- screenwidth settings now multiples of 160
+ 
+V2.72
+- speeded up typing response for keyboards
+- set backup bit for new documents
+- new register info dialog
+
+V2.71
+- changed menu stroke for 'Paste' back to palm standard '/P'
+  
+V2.70
+- quickload function for two documents
+  ('Menu/File/Switch' or button '1' <-> '2')
+- twin view function, allows two views of the same document
+  ('Menu/Options/Twin View')
+- jump to line function ('Menu/Edit/Jump Line')
+- quick name search in open dialog 
+  (enter the first character of a database name)
+- keyboard and keystroke support for bookmark dialog
+  ('Enter'=confirm and 'Tab'=cancel)
+- quick name search in bookmark dialog
+  (enter the first character of a bookmark name)
+- cut, copy, paste menus and shortcuts for dialogs
+  (search/replace and all text dialogs)
+- corrected handling of backup bit (Doc Prefs)
+- 'Save As' function now continues working with new saved file
+  (like in other editors)  
+
+V2.62
+- screenwidth in preferences now in listform with default width setting
+- UIMgr conform programming: no more warnings in emulator
+- fix: navigation bar toggle with OS4 corrected
+- fix: document changing with big screenwidth corrected
+
+V2.60
+- new home http://qland.de/qed for QED
+- added 'Editable' menupoint in file menu
+- added 'Editable' button
+  (more usability: write protect document for quick 
+  screen navigation between edits)
+- shortcut for paste function now windows conform '/V'
+- bugfix: scrollbar now reaches the very end of a document
+- bugfix: bookmarks with special characters are now scanned correct
+
+V2.52
+- additional navigation buttons
+- minor screen bug fixes
+- minor GSI bug fix
+
+V2.50
+- new search/replace function
+  ~ choose 'Case' for case sensitive search and 'Top' for
+    searching from beginning of file
+  ~ the 'Next' button starts searching, in replace mode
+    a 'Replace' and 'All' button will appear if the search
+    was successful
+  ~ choose 'Replace' to replace the marked passage or
+   'All' for replacing all further findings
+  ~ because replacing in compressed documents is very time
+    consuming, it is highly recomended to decompress your document
+    and check your devices batteries to be charged
+  ~ you can emergency exit the replace 'All' procedure by
+    holding down the stylus on the screen for a while
+  ~ you can use keystroke Return (/) to start search 
+    or keystroke Tab to cancel the dialog, this works with
+    keyboards as well (most other QED dialogs behave the same)
+- new bookmark functions, rename, delete, sort
+  sorting can be done manually up or down, alphanumeric
+  or by position in the document 
+  (changing of bookmarks only works on documents not in flash-rom)
+- use menu 'Edit/Scan Book' to update tag based <...> bookmarks 
+  after changing your document
+- new designed, more comfortable proportional scrollbar
+  and bigger sized navigation buttons
+- the arrow right/down symbol under the scrollbar switches
+  vertical/horizontal use of the scrollbar
+- several kinds of navigation with scrollbar and buttons
+  ~ one line
+  ~ one page
+  ~ direct via scrollbar tap 
+  ~ direct via scrollbar slide
+- word count in menu 'File/Info' 
+- double tap for file load in open dialog
+- global search now works case sensitive 
+- fixed error in function 'Toggle Bar'
+- corrected search function
+
+V2.21
+- fixed bug, loading 'SmartDoc' edited files
+
+V2.20
+- support of global find function
+  ~ works only when QED is the current application
+  ~ to specify search, only DOC's of actual set category
+    (in Open Dialog) are searched, set category to 'All'
+    for searching all DOC's
+- new function in menu 'File/Save as', stores compressed
+  or uncompressed (with big DOC's it will last up to several
+  minutes when changing compression from uncompressed to compressed)
+- 'Comp new files' checkmark in menu 'Options/Default Prefs' 
+  now asked in 'New File' function
+- shows progress bar while compressing 
+- now handles DOC's in flashROM 
+  'ROM File' is displayed in menu 'File/Info'
+  restrictions for flashROM DOC's:
+  ~ only DOC integrated bookmarks are possible
+  ~ category and privacy can't be changed
+  ~ reading position isn't stored (yet)
+- fixes TAB-display bug from V2.10
+  
+2.10
+- fixes for newer OS versions
+- registration code enhancement
+- default for new opened DOC's is now editable
+
+V2.05
+- fixes rename bug
+- fixes SmartDoc prefs crash
+
+V2.01
+- supports all system fonts now
+  and if OS3 large bold font
+- BackupBuddy compatible at last
+- supports autoscan of bookmarks 
+  (<...> tag at the end of document)
+- bookmarkcharacters now up to 12 chars long
+- doubletap feature can be disabled now
+- sorted filenames in opendialog
+- added a file/close menue point
+- screentab scroll and sidescroll now with two speeds
+- the status bar can be switched off now,
+  that gives one additional line to read
+- added 'Edit/Bookmark' menu for calling bookmarks
+  with a graffity keystroke
+- categories now work together with QEX and MakeDoc
+- support for GoType keyboard:
+  when in document: (* means if document is set non editable)
+    up/down keys        =   up/down cursor/(scroll*)
+    alt up/down keys    =   up/down 1 page
+    left/right keys     =   left/right cursor/(scroll*)
+  when in open dialog:
+    up/down keys        =   up/down 
+    alt up/down keys    =   up/down 1 page
+    Enter key           =   selects OK
+    Tab key             =   selects Cancel 
+  when in text input field (rename, new file ...)
+    Enter key           =   selects OK
+    Tab key             =   selects Cancel 
+  Enter and Tab graffity keystrokes also work well instead
+  of a keyboard 
+  
+V1.56
+- fixed menu save error
+
+V1.55
+- additional rename and delete functions in file menu
+- no more nags on opening files, so QED can be used free
+  as reader
+- double tap function as quick copy
+  doubletapping on a word copies it into clipboard
+  doubletapping beside a word pastes the clipboard
+
+V1.54
+- category handling:
+  completely integrated in new opendialog,
+  category handling: add, rename, delete
+  file handling: load, rename, delete, change category
+  (file rename is possible in 'Menu/Options/DocPref' too)
+- privacy:
+  a file is hided if it's private-checkmark in
+  'Menu/Options/Doc Prefs' is set _and_
+  switch in application 'security' is set 'hide' 
+- now with default preferences (Menu/Options/Default Prefs)
+  and doc individual preferences (Menu/Options/Doc Prefs)
+  (including file rename)
+- special inputdialog with autosidescroll
+  (tap on checkmark or write a newline '/' on graffity area to confirm,
+  tap the cross to cancel action)
+- extended menufunctions
+  (added 'new file', 'open', 'search', 'search again')
+- newfile function allows now entry of filenames
+  (at last up to full len now)
+- a special condensed monospaced font 
+  (together with wide fieldwidths for clearly sourcecodeediting)
+  (Note: using this font produces a warning when running on 'Emulator'
+  you can ignore it by choosing 'Continue')
+- maximal screenwidth now set to 1200
+- correct handling of modification date of DOC
+  (for proper work with 'Backup Buddy'
+- fixed minor bugs
+
+V1.45
+- now reports if storage mem is too low
+- different register handling
+  (only internally)
+
+V1.43
+- scanning of text based bookmarks
+- rescanning of bookmarks without doublets,
+  (useful when bookmarks were shifted by editing)
+- user defined bookmark characters
+- filtering of CR's 
+  (no more little rectangles on screen)
+
+V1.42
+- handling of bookmarks
+- reduced nagging
+- fixed a minor rename bug
+
+V1.34/V1.35
+- uses only a minimum of dynamic RAM, now
+  works well on Palms with only 32 K heap
+- don't loads and crashs on corrupted DOC's
+- tries to close unclosed DOC's
+- starts up with a filerequester
+  if there was no previous file or
+  after deleting of files
+- softkeyboard now pops up without problems
+
+V1.32
+- editable switch in options
+- easy page navigation by tapping on text screen,
+  if document is switched not editable (up/down and left/right)
+- fscroll switch in options, if set a full screen of text
+  is scrolled, if not set a screen minus one line is scrolled
+- options-dialog switches are sorted now
+  left side:  individual file settings
+  right side: global settings
+- changed the small horizontal scrollsize to half a screen
+- file dialog now pops up with the actual file highlighted
+- changed minimum ownername length from 3 to 2
+- fixed update bug
+- some minor changes
+
+V1.30
+- different username handling
+- 160 pixels screenwidth as standard
+- beeing more economical with dynamic RAM
+- some minor changes
+  
+V1.28   
+- support of compression   
+- searchfunction  
+- support of big fonts   
+- textfield lines switchable  
+- undo function  
+- info menu   
+- correct support of 'keyboard'   
+- isn't disturbed by AportisDoc bookmarks anymore   
+- better support of DOC backupflag  
+- Palm III compatible  
+- runs very stabel   
+   
+V1.11T   
+- fixed zero length bug    
+    
+V1.0T
+- now coexists with AportisDoc    
+- filters compressed files     
+- supports hardware up/down buttons    
+- new dualstep navigation triangles    
+          
+How to use:      
+- install 'QED.prc' as usual   
+- use QEX for easy handling of DOC's on your PC
+  QEX is available on - http://www.qland.de/qed
+  (registered QED users can utilize their registration code for QEX to stop register messages)
+    or
+  use 'MakeDocW' or 'MakeDoc7' or a similar application on your  PC/MAC to make a Pilot DOC-file out of the text- or source-file you want to edit, the 'compress' option of this application may be set on or off  (CR/LF Removal and Translation set to none), install the resulting DOC-file as usual on your PalmPilot     
+- to receive the text- or source-files back on your PC/MAC, hotsync your PalmPilot and look for files in the '...pilot\yourname\backup'-directory. To convert these files back to PC/MAC format use 'MakeDoc' with option '-d' or a similar application. You can automate this by using batchfiles.
+     
+'MakeDocW' for Win95 you can get from:     
+http://ourworld.compuserve.com/homepages/Mark_Pierce     
+     
+'MakeDoc7' for DOS you can get from:     
+ftp://ftp.wustl.edu/systems/mac/amug/files/pilot/pc/makedoc7.zip    
+ftp://ftp.uniroma2.it/%7bB/amug/files/pilot/pc/makedoc7.zip    
+ftp://ftp.mgt.uea.ac.uk/Newton_Archive/ftp.amug.org-pilot/pc/makedoc7.zip    
+ftp://ftp.livewire.com.au/pub/amug/files/pilot/pc/makedoc7.zip    
+ftp://ftp.fh-mannheim.de/pub/software/pilot/makedoc7.zip    
+ftp://ftp.amug.org/pub/amug/bbs-in-a-box/files/pilot/pc/makedoc7.zip    
+    
+possible batchfile 'doc2txt.bat' to convert DOC->txt      
+(call with: doc2txt yourfile):     
+makedoc7 -d c:\pilot\yourname\backup\%1.pdb %1.txt     
+       
+Bugs & effects:      
+Up to now I've worked several hundred hours on QED, but for sure it is not bugfree. So don't hesitate to send me your bugreports. Lost or scrambled texts and dreams, I do not hope QED will produce, I cannot bring back for you. A 'good bad' example for this was version 1.0T, it 'killed' AportisDoc and many Pilot fans were unhappy. So use this software at your own risk. Although this text and some parts of QED's source are written with itself.
+- If using fieldwidths greater than 400 on DOC's without linefeeds texts may be displayed not correct
+- For speed reasons the scrollbar is positioned on the absoulute character scroll position, this might cause a 'non proportional' behaviour on short documents or fieldwidths greater than 160 pixels
+  
+Warning:    
+- do not install older versions of QED after installing versions >= 1.32   
+- Running QED on Emulator causes warnings when using the monospaced font. QED's 'non fullsize requesters' also produces warnings when running on Emulator in color device mode.
+
+-----
+Hires Fonts and OS5
+
+In fact that's exactly what (I think) I had tried before, and I failed. At that time I had had QED fonts patched correctly with FontHack123 in the same way, so I knew how to do it. For some reason it didn't work in my app. Most probably I forgot or mixed something. Now - following your advice - I did (I think) the same substitutions in FontHack123 and this time it works!
+
+
+>> I've could not manage this without patching, despite all tries I did, there
+>> seems no way to get a system conform custom hires font with a
+>> fontID > 128. I even was not able to generate a lowres custom font out of
+>> a file, it only works with a font resource bound to the application. Do
+>> you know a way to go?
+
+
+I don't know much about custom fonts, but perhaps I can help. If you say it works if the font is inside the application database, perhaps the overlay technique will also do.
+Or even without overlays, perhaps opening a font database at the beginning of PilotMain and leaving it open till the end of PilotMain will have the tame effect? That's what I do in HoHo (with plug-ins) and in Butterfly (where I even leave a database open after quitting, and all other applications accept it (as it covers ("overlays") a setting from a system database in ROM)).
+
+-----
+JOT problem
+
+  I figured out why the shift indicator wasn't showing.   I have "Jot"
+installed and enabled to show "ink" on the screen as I write.   I only use
+it in Graffiti mode, not Jot mode.    No other program has a conflict with
+this.   I wonder if you could try to get Qed to be compatible with Jot's
+on-screen ink feature?   Did you override a system trap to catch the shift
+indicator?  I wonder if there's a different order in which things could be
+painted that might solve it by chance.   Let me know if you need a copy of
+Jot.
+
+-----
+shift indicator problem
+
+QED v 2.83, I just downloaded it from your site a couple days ago.  I'm
+using a Palm m130.
+
+I have just discovered something that may help you figure out what's wrong
+with it...   If I pop up the Contrast adjustment screen then simple hit OK
+(without changing the contrast) the shift indicator appears when the nav bar
+of your app is repainted.   For example, if i stroke up,  up to turn on
+uppercase-lock, I see nothing.  Then if i tap contrast and OK, i see an
+uppercase lock arrow.      If I hit dot to go into punctuation, this remains
+an uppercase lock arrow until i hit contrast and OK, after which I can see
+the dot.   If I never hit contrast and OK the entire time I'm using QED, I
+never see any status indicator on the nav bar at all, just a little blank
+spot.  Thank you for your timely response to my question 
+
+-----
+FindHack
+
+FindHack http://perso.wanadoo.fr/fpillet/findhackGB.html ersetzt die Palm-eigene Suche und ich kann gezielt nur die gerade aktive Applikation (also z.B. nur QED) durchsuchen lassen. Oder ich kann ein Set von Applikationen definieren, dann werden nur diese Apps durchsucht. Das ist für mich wichtig, da ich manchmal nicht weiss, ob ich eine bestimmte Information in den Memos, in HanDBase oder in Quickword (oder eben dann QED) erfasst habe. Auf diese Art zu suchen, geht dann am schnellsten. Auch kann FindHack nach zwei Begriffen gleichzeitig suchen (es müssen beide Begriffe im File vorkommen), auch sehr nützlich, wenn man wie ich sehr viele Infos im Palm hat.
+
+Ebenso ist FindHack bei mir unverzichtbar, da die Palm-eigene Find-Funktion (die ja auch von QED verwendet wird) buggy ist. Vielleicht weil ich soviele Programme auf dem Palm habe, auf jeden Fall habe ich immer wieder Abstürze damit. Ich hatte eben auch diese Abstürze, als ich innerhalb von QED in der von Ihnen beschriebenen Weise alle Doks einer Kategorie durchsuchen wollte. 

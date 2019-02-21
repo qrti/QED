@@ -1,6 +1,6 @@
-#**QED**
+# **QED**
 
-###**Text- and Source-Code Editor for PalmOS**
+### **Text- and Source-Code Editor for PalmOS**
 
 ![Screenshot](https://github.com/qrti/QED/blob/master/Screenshot.gif)
 
